@@ -17,4 +17,7 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 
 	commentsGroup := r.Group("/api/v1/comments")
 	RegisterCommentRoutes(commentsGroup, db)
+
+	groupsGroup := r.Group("/api/v1/groups")
+	RegisterGroupRoutes(groupsGroup, db)
 }
