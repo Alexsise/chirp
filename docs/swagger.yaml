@@ -1246,4 +1246,10 @@ paths:
       summary: Обновить свой профиль
       tags:
       - users
+securityDefinitions:
+  BearerAuth:
+    description: 'Введите JWT токен в формате: Bearer <your_token>'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
