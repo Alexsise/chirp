@@ -14,19 +14,19 @@ func addModeratorHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("groupId")
 	var req AddModDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -45,7 +45,7 @@ func addModeratorHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	if !isModerator {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Only moderators can add other moderators"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to add moderators to this group"})
 		return
 	}
 
@@ -63,19 +63,19 @@ func removeModeratorHandler(c *gin.Context, db *gorm.DB) {
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
 	targetUserID, err := uuid.Parse(userIDParam)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -94,7 +94,7 @@ func removeModeratorHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	if !isModerator {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Only moderators can remove other moderators"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to remove moderators from this group"})
 		return
 	}
 

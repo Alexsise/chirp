@@ -16,7 +16,7 @@ import (
 func registerHandler(c *gin.Context, db *gorm.DB) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
@@ -51,7 +51,7 @@ func registerHandler(c *gin.Context, db *gorm.DB) {
 func loginHandler(c *gin.Context, db *gorm.DB) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
