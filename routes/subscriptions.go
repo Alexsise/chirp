@@ -15,19 +15,19 @@ func subscribeToGroupHandler(c *gin.Context, db *gorm.DB) {
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
 	var group models.Group
 	if err := db.Preload("Users").First(&group, "id = ?", groupID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to find group"})
 		return
 	}
 
@@ -51,19 +51,19 @@ func unsubscribeFromGroupHandler(c *gin.Context, db *gorm.DB) {
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
 	var group models.Group
 	if err := db.Preload("Users").First(&group, "id = ?", groupID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to find group"})
 		return
 	}
 

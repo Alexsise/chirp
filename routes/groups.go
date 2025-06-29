@@ -14,19 +14,19 @@ import (
 func createGroupHandler(c *gin.Context, db *gorm.DB) {
 	var req CreateGroupDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid group data"})
 		return
 	}
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -81,7 +81,7 @@ func getGroupDetailsHandler(c *gin.Context, db *gorm.DB) {
 
 	var group models.Group
 	if err := db.Preload("Moderators").Preload("Users").First(&group, "id = ?", groupID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to find group"})
 		return
 	}
 
@@ -122,13 +122,13 @@ func updateGroupHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("id")
 	var req UpdateGroupDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid group data"})
 		return
 	}
 
 	var group models.Group
 	if err := db.First(&group, "id = ?", groupID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to find group"})
 		return
 	}
 
