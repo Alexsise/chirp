@@ -7,14 +7,14 @@ import (
 )
 
 // auth.go
-// Represents the request payload for registering a user.
+// Представляет тело запроса для регистрации пользователя.
 type RegisterRequest struct {
 	Nickname string `json:"nickname" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
-// Represents the response payload for a registered user.
+// Представляет ответ для зарегистрированного пользователя.
 type RegisterResponse struct {
 	ID           uuid.UUID `json:"id"`
 	Nickname     string    `json:"nickname"`
@@ -22,24 +22,24 @@ type RegisterResponse struct {
 	RegisteredAt time.Time `json:"registeredAt"`
 }
 
-// Represents the request payload for logging in.
+// Представляет тело запроса для входа в систему.
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 
-// Represents the response payload for a login token.
+// Представляет ответ с токеном после входа в систему.
 type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-// Represents the response payload for a refreshed token.
+// Представляет ответ с обновлённым токеном.
 type RefreshResponse struct {
 	Token string `json:"token"`
 }
 
 // users.go
-// Represents the private user profile.
+// Представляет приватный профиль пользователя.
 type UserProfile struct {
 	ID                uuid.UUID `json:"id"`
 	Nickname          string    `json:"nickname"`
@@ -50,14 +50,14 @@ type UserProfile struct {
 	RegisteredAt      time.Time `json:"registeredAt"`
 }
 
-// Represents the request payload for updating a user profile.
+// Представляет тело запроса для обновления профиля пользователя.
 type UpdateUserProfileRequest struct {
 	Nickname  *string `json:"nickname"`
 	BannerURL *string `json:"bannerUrl"`
 	Password  *string `json:"password"`
 }
 
-// Represents the public user profile.
+// Представляет публичный профиль пользователя.
 type PublicUserProfile struct {
 	ID        uuid.UUID `json:"id"`
 	Nickname  string    `json:"nickname"`
@@ -65,14 +65,14 @@ type PublicUserProfile struct {
 }
 
 // comments.go
-// Represents the request payload for creating a comment.
+// Представляет тело запроса для создания комментария.
 type CreateCommentRequest struct {
 	PostID    uuid.UUID `json:"postId" binding:"required"`
 	Content   string    `json:"content" binding:"required"`
 	ReplyToID *uuid.UUID `json:"replyToId"`
 }
 
-// Represents the data transfer object for a comment.
+// Представляет DTO для комментария.
 type CommentDTO struct {
 	ID         uuid.UUID `json:"id"`
 	PostID     uuid.UUID `json:"postId"`
@@ -84,35 +84,35 @@ type CommentDTO struct {
 	CreatedAt  time.Time `json:"createdAt"`
 }
 
-// Represents the request payload for voting on a comment.
+// Представляет тело запроса для голосования за комментарий.
 type VoteCommentRequest struct {
 	Value int `json:"value" binding:"required,oneof=-1 1"`
 }
 
-// Represents the response payload for voting on a comment.
+// Представляет ответ на голосование за комментарий.
 type VoteCommentResponse struct {
 	Reputation int `json:"reputation"`
 }
 
-// Represents the request payload for updating a comment.
+// Представляет тело запроса для обновления комментария.
 type UpdateCommentDTO struct {
 	Content string `json:"content" binding:"required"`
 }
 
-// Represents the request payload for voting on a comment.
+// Представляет тело запроса для голосования за комментарий.
 type VoteDTO struct {
 	Value int `json:"value" binding:"required,oneof=-1 1"`
 }
 
 // posts.go
-// Represents the request payload for creating a post.
+// Представляет тело запроса для создания поста.
 type CreatePostRequest struct {
 	Content   string    `json:"content" binding:"required"`
 	MediaUrls []string  `json:"mediaUrls"`
 	GroupID   *uuid.UUID `json:"groupId"`
 }
 
-// Represents the data transfer object for a post.
+// Представляет DTO для поста.
 type PostDTO struct {
 	ID         uuid.UUID `json:"id"`
 	AuthorID   uuid.UUID `json:"authorId"`
@@ -123,7 +123,7 @@ type PostDTO struct {
 	GroupID    *uuid.UUID `json:"groupId"`
 }
 
-// Represents the response payload for paginated posts.
+// Представляет ответ с постами с пагинацией.
 type PaginatedPostsResponse struct {
 	Posts      []PostDTO `json:"posts"`
 	Page       int       `json:"page"`
@@ -131,37 +131,37 @@ type PaginatedPostsResponse struct {
 	TotalCount int64     `json:"totalCount"`
 }
 
-// Represents the detailed data transfer object for a post.
+// Представляет детализированный DTO для поста.
 type PostDetailDTO struct {
 	PostDTO
 	Comments []CommentDTO `json:"comments"`
 }
 
-// Represents the request payload for updating a post.
+// Представляет тело запроса для обновления поста.
 type UpdatePostRequest struct {
 	Content   *string   `json:"content"`
 	MediaUrls *[]string `json:"mediaUrls"`
 }
 
-// Represents the request payload for voting on a post.
+// Представляет тело запроса для голосования за пост.
 type VoteRequest struct {
 	Value int `json:"value" binding:"required,oneof=-1 1"`
 }
 
-// Represents the response payload for voting on a post.
+// Представляет ответ на голосование за пост.
 type VoteResponse struct {
 	Reputation int `json:"reputation"`
 }
 
 // groups.go
-// Represents the request payload for creating a group.
+// Представляет тело запроса для создания группы.
 type CreateGroupDTO struct {
 	GroupName   string `json:"groupName" binding:"required"`
 	Description string `json:"description"`
 	BannerURL   string `json:"bannerUrl"`
 }
 
-// Represents the data transfer object for a group.
+// Представляет DTO для группы.
 type GroupDTO struct {
 	ID           uuid.UUID `json:"id"`
 	GroupName    string    `json:"groupName"`
@@ -170,27 +170,27 @@ type GroupDTO struct {
 	Description  string    `json:"description"`
 }
 
-// Represents the detailed data transfer object for a group.
+// Представляет детализированный DTO для группы.
 type GroupDetailDTO struct {
 	GroupDTO
 	Moderators []UserProfile `json:"moderators"`
 	Users      []UserProfile `json:"users"`
 }
 
-// Represents the request payload for updating a group.
+// Представляет тело запроса для обновления группы.
 type UpdateGroupDTO struct {
 	Description *string `json:"description"`
 	BannerURL   *string `json:"bannerUrl"`
 }
 
 // subscriptions.go
-// Represents the request payload for subscribing to a user.
+// Представляет тело запроса для подписки на пользователя.
 type SubscribeDTO struct {
 	TargetUserID uuid.UUID `json:"targetUserId" binding:"required"`
 }
 
 // moderation.go
-// Represents the request payload for adding a moderator to a group.
+// Представляет тело запроса для добавления модератора в группу.
 type AddModDTO struct {
 	UserID uuid.UUID `json:"userId" binding:"required"`
 }
