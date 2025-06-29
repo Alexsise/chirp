@@ -12,6 +12,14 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary Получить свой профиль
+// @Description Возвращает приватный профиль текущего пользователя
+// @Tags users
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} routes.UserProfile
+// @Failure 401 {object} map[string]string
+// @Router /users/me [get]
 func getUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	userID, exists := c.Get("userId")
 	if !exists {
@@ -44,6 +52,17 @@ func getUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, profile)
 }
 
+// @Summary Обновить свой профиль
+// @Description Обновляет профиль текущего пользователя
+// @Tags users
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body routes.UpdateUserProfileRequest true "Данные для обновления"
+// @Success 200 {object} routes.UserProfile
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /users/me [put]
 func updateUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	userID, exists := c.Get("userId")
 	if !exists {
@@ -102,6 +121,14 @@ func updateUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, profile)
 }
 
+// @Summary Получить публичный профиль пользователя
+// @Description Возвращает публичный профиль пользователя по id
+// @Tags users
+// @Produce json
+// @Param id path string true "ID пользователя"
+// @Success 200 {object} routes.PublicUserProfile
+// @Failure 404 {object} map[string]string
+// @Router /users/{id} [get]
 func getPublicUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	userID := c.Param("id")
 

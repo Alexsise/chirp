@@ -11,6 +11,17 @@ import (
 	"chirp/models"
 )
 
+// @Summary Создать комментарий
+// @Description Создаёт новый комментарий к посту
+// @Tags comments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body routes.CreateCommentRequest true "Данные для комментария"
+// @Success 201 {object} routes.CommentDTO
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /comments [post]
 func createCommentHandler(c *gin.Context, db *gorm.DB) {
 	var req CreateCommentRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -58,6 +69,14 @@ func createCommentHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// @Summary Получить комментарии к посту
+// @Description Получает все комментарии к посту
+// @Tags comments
+// @Produce json
+// @Param id path string true "ID поста"
+// @Success 200 {array} models.Comment
+// @Failure 500 {object} map[string]string
+// @Router /comments/posts/{id}/comments [get]
 func getCommentsForPostHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("id")
 	var comments []models.Comment
@@ -69,6 +88,20 @@ func getCommentsForPostHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, comments)
 }
 
+// @Summary Обновить комментарий
+// @Description Обновляет комментарий пользователя
+// @Tags comments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID комментария"
+// @Param data body routes.UpdateCommentDTO true "Данные для обновления"
+// @Success 200 {object} models.Comment
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /comments/{id} [put]
 func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
 	var req UpdateCommentDTO
@@ -108,6 +141,16 @@ func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, comment)
 }
 
+// @Summary Удалить комментарий
+// @Description Удаляет комментарий пользователя
+// @Tags comments
+// @Security BearerAuth
+// @Param id path string true "ID комментария"
+// @Success 204 {string} string ""
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /comments/{id} [delete]
 func deleteCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
 
@@ -141,6 +184,18 @@ func deleteCommentHandler(c *gin.Context, db *gorm.DB) {
 	c.Status(http.StatusNoContent)
 }
 
+// @Summary Голосовать за комментарий
+// @Description Голосует за комментарий (лайк/дизлайк)
+// @Tags comments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID комментария"
+// @Param data body routes.VoteDTO true "Голос"
+// @Success 200 {object} models.Comment
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /comments/{id}/vote [post]
 func voteCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
 	var req VoteDTO

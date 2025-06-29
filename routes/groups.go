@@ -11,6 +11,17 @@ import (
 	"chirp/models"
 )
 
+// @Summary Создать группу
+// @Description Создаёт новую группу
+// @Tags groups
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body routes.CreateGroupDTO true "Данные для группы"
+// @Success 201 {object} routes.GroupDTO
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /groups [post]
 func createGroupHandler(c *gin.Context, db *gorm.DB) {
 	var req CreateGroupDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -55,6 +66,13 @@ func createGroupHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// @Summary Получить список групп
+// @Description Получает список всех групп
+// @Tags groups
+// @Produce json
+// @Success 200 {array} routes.GroupDTO
+// @Failure 500 {object} map[string]string
+// @Router /groups [get]
 func listGroupsHandler(c *gin.Context, db *gorm.DB) {
 	var groups []models.Group
 	if err := db.Find(&groups).Error; err != nil {
@@ -76,6 +94,14 @@ func listGroupsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, groupDTOs)
 }
 
+// @Summary Получить детали группы
+// @Description Получает подробную информацию о группе
+// @Tags groups
+// @Produce json
+// @Param id path string true "ID группы"
+// @Success 200 {object} routes.GroupDetailDTO
+// @Failure 404 {object} map[string]string
+// @Router /groups/{id} [get]
 func getGroupDetailsHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("id")
 
@@ -118,6 +144,19 @@ func getGroupDetailsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Summary Обновить группу
+// @Description Обновляет данные группы
+// @Tags groups
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID группы"
+// @Param data body routes.UpdateGroupDTO true "Данные для обновления"
+// @Success 200 {object} routes.GroupDTO
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /groups/{id} [put]
 func updateGroupHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("id")
 	var req UpdateGroupDTO
@@ -155,6 +194,14 @@ func updateGroupHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Summary Удалить группу
+// @Description Удаляет группу
+// @Tags groups
+// @Security BearerAuth
+// @Param id path string true "ID группы"
+// @Success 204 {string} string ""
+// @Failure 500 {object} map[string]string
+// @Router /groups/{id} [delete]
 func deleteGroupHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("id")
 

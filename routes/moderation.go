@@ -10,6 +10,20 @@ import (
 	"chirp/models"
 )
 
+// @Summary Добавить модератора в группу
+// @Description Добавляет пользователя в список модераторов группы
+// @Tags moderation
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param groupId path string true "ID группы"
+// @Param data body routes.AddModDTO true "Данные модератора"
+// @Success 204 {string} string ""
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /groups/{groupId}/moderators [post]
 func addModeratorHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("groupId")
 	var req AddModDTO
@@ -57,6 +71,18 @@ func addModeratorHandler(c *gin.Context, db *gorm.DB) {
 	c.Status(http.StatusNoContent)
 }
 
+// @Summary Удалить модератора из группы
+// @Description Удаляет пользователя из списка модераторов группы
+// @Tags moderation
+// @Security BearerAuth
+// @Param groupId path string true "ID группы"
+// @Param userId path string true "ID пользователя"
+// @Success 204 {string} string ""
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /groups/{groupId}/moderators/{userId} [delete]
 func removeModeratorHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("groupId")
 	userIDParam := c.Param("userId")

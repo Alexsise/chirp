@@ -10,6 +10,15 @@ import (
 	"chirp/models"
 )
 
+// @Summary Подписаться на группу
+// @Description Подписывает пользователя на группу
+// @Tags subscriptions
+// @Security BearerAuth
+// @Param groupId path string true "ID группы"
+// @Success 204 {string} string ""
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /groups/{groupId}/subscribe [post]
 func subscribeToGroupHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("groupId")
 
@@ -46,6 +55,15 @@ func subscribeToGroupHandler(c *gin.Context, db *gorm.DB) {
 	c.Status(http.StatusNoContent)
 }
 
+// @Summary Отписаться от группы
+// @Description Отписывает пользователя от группы
+// @Tags subscriptions
+// @Security BearerAuth
+// @Param groupId path string true "ID группы"
+// @Success 204 {string} string ""
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /groups/{groupId}/subscribe [delete]
 func unsubscribeFromGroupHandler(c *gin.Context, db *gorm.DB) {
 	groupID := c.Param("groupId")
 

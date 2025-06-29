@@ -13,6 +13,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary Создать пост
+// @Description Создаёт новый пост
+// @Tags posts
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param data body routes.CreatePostRequest true "Данные для поста"
+// @Success 201 {object} routes.PostDTO
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /posts [post]
 func createPostHandler(c *gin.Context, db *gorm.DB) {
 	var req CreatePostRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -58,6 +69,15 @@ func createPostHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// @Summary Получить список постов
+// @Description Получает посты с пагинацией
+// @Tags posts
+// @Produce json
+// @Param page query int false "Страница"
+// @Param limit query int false "Лимит"
+// @Param sort query string false "Сортировка (createdAt|reputation)"
+// @Success 200 {object} routes.PaginatedPostsResponse
+// @Router /posts [get]
 func getPaginatedPostsHandler(c *gin.Context, db *gorm.DB) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -97,6 +117,14 @@ func getPaginatedPostsHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Summary Получить детали поста
+// @Description Получает подробную информацию о посте
+// @Tags posts
+// @Produce json
+// @Param id path string true "ID поста"
+// @Success 200 {object} routes.PostDetailDTO
+// @Failure 404 {object} map[string]string
+// @Router /posts/{id} [get]
 func getPostDetailHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
 	var post models.Post
@@ -135,6 +163,20 @@ func getPostDetailHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Summary Обновить пост
+// @Description Обновляет пост пользователя
+// @Tags posts
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID поста"
+// @Param data body routes.UpdatePostRequest true "Данные для обновления"
+// @Success 200 {object} routes.PostDTO
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /posts/{id} [put]
 func updatePostHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
 	var req UpdatePostRequest
@@ -190,6 +232,16 @@ func updatePostHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Summary Удалить пост
+// @Description Удаляет пост пользователя
+// @Tags posts
+// @Security BearerAuth
+// @Param id path string true "ID поста"
+// @Success 204 {string} string ""
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /posts/{id} [delete]
 func deletePostHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
 
@@ -223,6 +275,18 @@ func deletePostHandler(c *gin.Context, db *gorm.DB) {
 	c.Status(http.StatusNoContent)
 }
 
+// @Summary Голосовать за пост
+// @Description Голосует за пост (лайк/дизлайк)
+// @Tags posts
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "ID поста"
+// @Param data body routes.VoteRequest true "Голос"
+// @Success 200 {object} routes.VoteResponse
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /posts/{id}/vote [post]
 func votePostHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
 	var req VoteRequest

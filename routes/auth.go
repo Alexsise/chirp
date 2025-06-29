@@ -13,6 +13,16 @@ import (
 	"chirp/models"
 )
 
+// @Summary Регистрация пользователя
+// @Description Регистрирует нового пользователя
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param data body routes.RegisterRequest true "Данные для регистрации"
+// @Success 201 {object} routes.RegisterResponse
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /auth/register [post]
 func registerHandler(c *gin.Context, db *gorm.DB) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -48,6 +58,16 @@ func registerHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// @Summary Вход пользователя
+// @Description Аутентификация пользователя и выдача JWT
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param data body routes.LoginRequest true "Данные для входа"
+// @Success 200 {object} routes.LoginResponse
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /auth/login [post]
 func loginHandler(c *gin.Context, db *gorm.DB) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -85,6 +105,14 @@ func loginHandler(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, LoginResponse{Token: tokenString})
 }
 
+// @Summary Обновить JWT токен
+// @Description Обновляет JWT токен пользователя
+// @Tags auth
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} routes.RefreshResponse
+// @Failure 401 {object} map[string]string
+// @Router /auth/refresh [post]
 func refreshHandler(c *gin.Context) {
 	tokenString := c.GetHeader("Authorization")
 	if tokenString == "" {

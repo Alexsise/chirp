@@ -1,0 +1,1249 @@
+basePath: /api/v1
+definitions:
+  models.Comment:
+    properties:
+      author:
+        $ref: '#/definitions/models.User'
+      authorID:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      isReply:
+        type: boolean
+      postID:
+        type: string
+      replyToID:
+        type: string
+      reputation:
+        type: integer
+    type: object
+  models.Group:
+    properties:
+      bannerURL:
+        type: string
+      description:
+        type: string
+      groupName:
+        type: string
+      id:
+        type: string
+      moderators:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      registeredAt:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    type: object
+  models.User:
+    properties:
+      bannerURL:
+        type: string
+      email:
+        type: string
+      groups:
+        items:
+          $ref: '#/definitions/models.Group'
+        type: array
+      id:
+        type: string
+      nickname:
+        type: string
+      passwordHash:
+        type: string
+      registeredAt:
+        type: string
+      reputationComments:
+        type: integer
+      reputationPosts:
+        type: integer
+      subscriptions:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    type: object
+  routes.AddModDTO:
+    properties:
+      userId:
+        type: string
+    required:
+    - userId
+    type: object
+  routes.CommentDTO:
+    properties:
+      authorId:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      isReply:
+        type: boolean
+      postId:
+        type: string
+      replyToId:
+        type: string
+      reputation:
+        type: integer
+    type: object
+  routes.CreateCommentRequest:
+    properties:
+      content:
+        type: string
+      postId:
+        type: string
+      replyToId:
+        type: string
+    required:
+    - content
+    - postId
+    type: object
+  routes.CreateGroupDTO:
+    properties:
+      bannerUrl:
+        type: string
+      description:
+        type: string
+      groupName:
+        type: string
+    required:
+    - groupName
+    type: object
+  routes.CreatePostRequest:
+    properties:
+      content:
+        type: string
+      groupId:
+        type: string
+      mediaUrls:
+        items:
+          type: string
+        type: array
+    required:
+    - content
+    type: object
+  routes.GroupDTO:
+    properties:
+      bannerUrl:
+        type: string
+      description:
+        type: string
+      groupName:
+        type: string
+      id:
+        type: string
+      registeredAt:
+        type: string
+    type: object
+  routes.GroupDetailDTO:
+    properties:
+      bannerUrl:
+        type: string
+      description:
+        type: string
+      groupName:
+        type: string
+      id:
+        type: string
+      moderators:
+        items:
+          $ref: '#/definitions/routes.UserProfile'
+        type: array
+      registeredAt:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/routes.UserProfile'
+        type: array
+    type: object
+  routes.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  routes.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  routes.PaginatedPostsResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      posts:
+        items:
+          $ref: '#/definitions/routes.PostDTO'
+        type: array
+      totalCount:
+        type: integer
+    type: object
+  routes.PostDTO:
+    properties:
+      authorId:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      groupId:
+        type: string
+      id:
+        type: string
+      mediaUrls:
+        items:
+          type: string
+        type: array
+      reputation:
+        type: integer
+    type: object
+  routes.PostDetailDTO:
+    properties:
+      authorId:
+        type: string
+      comments:
+        items:
+          $ref: '#/definitions/routes.CommentDTO'
+        type: array
+      content:
+        type: string
+      createdAt:
+        type: string
+      groupId:
+        type: string
+      id:
+        type: string
+      mediaUrls:
+        items:
+          type: string
+        type: array
+      reputation:
+        type: integer
+    type: object
+  routes.PublicUserProfile:
+    properties:
+      bannerUrl:
+        type: string
+      id:
+        type: string
+      nickname:
+        type: string
+    type: object
+  routes.RefreshResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  routes.RegisterRequest:
+    properties:
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - nickname
+    - password
+    type: object
+  routes.RegisterResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      nickname:
+        type: string
+      registeredAt:
+        type: string
+    type: object
+  routes.UpdateCommentDTO:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
+  routes.UpdateGroupDTO:
+    properties:
+      bannerUrl:
+        type: string
+      description:
+        type: string
+    type: object
+  routes.UpdatePostRequest:
+    properties:
+      content:
+        type: string
+      mediaUrls:
+        items:
+          type: string
+        type: array
+    type: object
+  routes.UpdateUserProfileRequest:
+    properties:
+      bannerUrl:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  routes.UserProfile:
+    properties:
+      bannerUrl:
+        type: string
+      commentReputation:
+        type: integer
+      email:
+        type: string
+      id:
+        type: string
+      nickname:
+        type: string
+      postReputation:
+        type: integer
+      registeredAt:
+        type: string
+    type: object
+  routes.VoteDTO:
+    properties:
+      value:
+        enum:
+        - -1
+        - 1
+        type: integer
+    required:
+    - value
+    type: object
+  routes.VoteRequest:
+    properties:
+      value:
+        enum:
+        - -1
+        - 1
+        type: integer
+    required:
+    - value
+    type: object
+  routes.VoteResponse:
+    properties:
+      reputation:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a Reddit-like REST API.
+  title: Chirp API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Аутентификация пользователя и выдача JWT
+      parameters:
+      - description: Данные для входа
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Вход пользователя
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      description: Обновляет JWT токен пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.RefreshResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить JWT токен
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Регистрирует нового пользователя
+      parameters:
+      - description: Данные для регистрации
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/routes.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /comments:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новый комментарий к посту
+      parameters:
+      - description: Данные для комментария
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/routes.CommentDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создать комментарий
+      tags:
+      - comments
+  /comments/{id}:
+    delete:
+      description: Удаляет комментарий пользователя
+      parameters:
+      - description: ID комментария
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удалить комментарий
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      description: Обновляет комментарий пользователя
+      parameters:
+      - description: ID комментария
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdateCommentDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить комментарий
+      tags:
+      - comments
+  /comments/{id}/vote:
+    post:
+      consumes:
+      - application/json
+      description: Голосует за комментарий (лайк/дизлайк)
+      parameters:
+      - description: ID комментария
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Голос
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.VoteDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Голосовать за комментарий
+      tags:
+      - comments
+  /comments/posts/{id}/comments:
+    get:
+      description: Получает все комментарии к посту
+      parameters:
+      - description: ID поста
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Comment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить комментарии к посту
+      tags:
+      - comments
+  /groups:
+    get:
+      description: Получает список всех групп
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/routes.GroupDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить список групп
+      tags:
+      - groups
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новую группу
+      parameters:
+      - description: Данные для группы
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreateGroupDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/routes.GroupDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создать группу
+      tags:
+      - groups
+  /groups/{groupId}/moderators:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет пользователя в список модераторов группы
+      parameters:
+      - description: ID группы
+        in: path
+        name: groupId
+        required: true
+        type: string
+      - description: Данные модератора
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.AddModDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Добавить модератора в группу
+      tags:
+      - moderation
+  /groups/{groupId}/moderators/{userId}:
+    delete:
+      description: Удаляет пользователя из списка модераторов группы
+      parameters:
+      - description: ID группы
+        in: path
+        name: groupId
+        required: true
+        type: string
+      - description: ID пользователя
+        in: path
+        name: userId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удалить модератора из группы
+      tags:
+      - moderation
+  /groups/{groupId}/subscribe:
+    delete:
+      description: Отписывает пользователя от группы
+      parameters:
+      - description: ID группы
+        in: path
+        name: groupId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Отписаться от группы
+      tags:
+      - subscriptions
+    post:
+      description: Подписывает пользователя на группу
+      parameters:
+      - description: ID группы
+        in: path
+        name: groupId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Подписаться на группу
+      tags:
+      - subscriptions
+  /groups/{id}:
+    delete:
+      description: Удаляет группу
+      parameters:
+      - description: ID группы
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удалить группу
+      tags:
+      - groups
+    get:
+      description: Получает подробную информацию о группе
+      parameters:
+      - description: ID группы
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GroupDetailDTO'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить детали группы
+      tags:
+      - groups
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные группы
+      parameters:
+      - description: ID группы
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdateGroupDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.GroupDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить группу
+      tags:
+      - groups
+  /posts:
+    get:
+      description: Получает посты с пагинацией
+      parameters:
+      - description: Страница
+        in: query
+        name: page
+        type: integer
+      - description: Лимит
+        in: query
+        name: limit
+        type: integer
+      - description: Сортировка (createdAt|reputation)
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.PaginatedPostsResponse'
+      summary: Получить список постов
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новый пост
+      parameters:
+      - description: Данные для поста
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/routes.PostDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создать пост
+      tags:
+      - posts
+  /posts/{id}:
+    delete:
+      description: Удаляет пост пользователя
+      parameters:
+      - description: ID поста
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удалить пост
+      tags:
+      - posts
+    get:
+      description: Получает подробную информацию о посте
+      parameters:
+      - description: ID поста
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.PostDetailDTO'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить детали поста
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Обновляет пост пользователя
+      parameters:
+      - description: ID поста
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.PostDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить пост
+      tags:
+      - posts
+  /posts/{id}/vote:
+    post:
+      consumes:
+      - application/json
+      description: Голосует за пост (лайк/дизлайк)
+      parameters:
+      - description: ID поста
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Голос
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.VoteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.VoteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Голосовать за пост
+      tags:
+      - posts
+  /users/{id}:
+    get:
+      description: Возвращает публичный профиль пользователя по id
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.PublicUserProfile'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить публичный профиль пользователя
+      tags:
+      - users
+  /users/me:
+    get:
+      description: Возвращает приватный профиль текущего пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.UserProfile'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получить свой профиль
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Обновляет профиль текущего пользователя
+      parameters:
+      - description: Данные для обновления
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdateUserProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.UserProfile'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновить свой профиль
+      tags:
+      - users
+swagger: "2.0"

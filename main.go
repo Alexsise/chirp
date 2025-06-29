@@ -7,6 +7,11 @@ import (
 	"chirp/routes"
 
 	"github.com/gin-gonic/gin"
+
+	_ "chirp/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title Chirp API
@@ -25,6 +30,7 @@ func main() {
 	}()
 
 	r := gin.Default()
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Swagger setup
 
