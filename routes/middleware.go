@@ -55,7 +55,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 		parsedUUID, err := uuid.Parse(userID)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user ID format"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user ID"})
 			c.Abort()
 			return
 		}

@@ -14,19 +14,19 @@ import (
 func createCommentHandler(c *gin.Context, db *gorm.DB) {
 	var req CreateCommentRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -73,18 +73,18 @@ func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
 	var req UpdateCommentDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -95,7 +95,7 @@ func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	if comment.AuthorID != authorID {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You can only edit your own comments"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to edit this comment"})
 		return
 	}
 
@@ -113,12 +113,12 @@ func deleteCommentHandler(c *gin.Context, db *gorm.DB) {
 
 	userID, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized access"})
 		return
 	}
 	authorID, ok := userID.(uuid.UUID)
 	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 		return
 	}
 
@@ -129,7 +129,7 @@ func deleteCommentHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	if comment.AuthorID != authorID {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You can only delete your own comments"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to delete this comment"})
 		return
 	}
 
@@ -145,7 +145,7 @@ func voteCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
 	var req VoteDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
 	}
 
