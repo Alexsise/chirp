@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -27,7 +28,7 @@ type Post struct {
 	AuthorID   uuid.UUID `gorm:"type:uuid;not null"`
 	Author     User      `gorm:"foreignKey:AuthorID"`
 	Content    string    `gorm:"type:text;not null"`
-	MediaUrls  string    `gorm:"type:json"`
+	MediaUrls pq.StringArray `gorm:"type:text[]" json:"mediaUrls"`
 	Reputation int       `gorm:"default:0"`
 	CreatedAt  time.Time `gorm:"not null"`
 	GroupID    *uuid.UUID
