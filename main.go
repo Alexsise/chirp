@@ -14,6 +14,11 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Введите JWT токен в формате: Bearer <your_token>
+
 // @title Chirp API
 // @version 1.0
 // @description This is a Reddit-like REST API.
