@@ -35,7 +35,7 @@ func createPostHandler(c *gin.Context, db *gorm.DB) {
 	post := models.Post{
 		AuthorID:  authorID,
 		Content:   req.Content,
-		MediaUrls:  req.MediaUrls[0], // Assuming single media URL for simplicity
+		MediaUrls:  req.MediaUrls, // Assuming single media URL for simplicity
 		CreatedAt: time.Now(),
 		GroupID:   req.GroupID,
 	}
@@ -49,7 +49,7 @@ func createPostHandler(c *gin.Context, db *gorm.DB) {
 		ID:        post.ID,
 		AuthorID:  post.AuthorID,
 		Content:   post.Content,
-		MediaUrls: []string{post.MediaUrls},
+		MediaUrls: post.MediaUrls,
 		Reputation: post.Reputation,
 		CreatedAt: post.CreatedAt,
 		GroupID:   post.GroupID,
@@ -80,7 +80,7 @@ func getPaginatedPostsHandler(c *gin.Context, db *gorm.DB) {
 			ID:        post.ID,
 			AuthorID:  post.AuthorID,
 			Content:   post.Content,
-			MediaUrls: []string{post.MediaUrls},
+			MediaUrls: post.MediaUrls,
 			Reputation: post.Reputation,
 			CreatedAt: post.CreatedAt,
 			GroupID:   post.GroupID,
@@ -100,7 +100,7 @@ func getPaginatedPostsHandler(c *gin.Context, db *gorm.DB) {
 func getPostDetailHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
 	var post models.Post
-	if err := db.Preload("Comments").First(&post, postId).Error; err != nil {
+	if err := db.Preload("Comments").First(&post, "id = ?",postId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
 	}
@@ -124,7 +124,7 @@ func getPostDetailHandler(c *gin.Context, db *gorm.DB) {
 			ID:        post.ID,
 			AuthorID:  post.AuthorID,
 			Content:   post.Content,
-			MediaUrls: []string{post.MediaUrls},
+			MediaUrls: post.MediaUrls,
 			Reputation: post.Reputation,
 			CreatedAt: time.Now(),
 			GroupID:   post.GroupID,
@@ -143,9 +143,25 @@ func updatePostHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
+	userID, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	authorID, ok := userID.(uuid.UUID)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+
 	var post models.Post
-	if err := db.First(&post, postId).Error; err != nil {
+	if err := db.First(&post, "id = ?", postId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	if post.AuthorID != authorID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You can only edit your own posts"})
 		return
 	}
 
@@ -153,7 +169,7 @@ func updatePostHandler(c *gin.Context, db *gorm.DB) {
 		post.Content = *req.Content
 	}
 	if req.MediaUrls != nil && len(*req.MediaUrls) > 0 {
-		post.MediaUrls = (*req.MediaUrls)[0] // Assuming single media URL for simplicity
+		post.MediaUrls = *req.MediaUrls
 	}
 
 	if err := db.Save(&post).Error; err != nil {
@@ -165,9 +181,9 @@ func updatePostHandler(c *gin.Context, db *gorm.DB) {
 		ID:        post.ID,
 		AuthorID:  post.AuthorID,
 		Content:   post.Content,
-		MediaUrls: []string{post.MediaUrls},
+		MediaUrls: post.MediaUrls,
 		Reputation: post.Reputation,
-		CreatedAt: time.Now(),
+		CreatedAt: post.CreatedAt,
 		GroupID:   post.GroupID,
 	}
 
@@ -176,6 +192,28 @@ func updatePostHandler(c *gin.Context, db *gorm.DB) {
 
 func deletePostHandler(c *gin.Context, db *gorm.DB) {
 	postId := c.Param("postId")
+
+	userID, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	authorID, ok := userID.(uuid.UUID)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+
+	var post models.Post
+	if err := db.First(&post, "id = ?", postId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		return
+	}
+
+	if post.AuthorID != authorID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You can only delete your own posts"})
+		return
+	}
 
 	if err := db.Delete(&models.Post{}, postId).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete post"})
@@ -194,7 +232,7 @@ func votePostHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	var post models.Post
-	if err := db.First(&post, postId).Error; err != nil {
+	if err := db.First(&post, "id = ?",postId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
 	}

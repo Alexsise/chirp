@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 )
 
 func JWTMiddleware() gin.HandlerFunc {
@@ -52,8 +53,14 @@ func JWTMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		parsedUUID, err := uuid.Parse(userID)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user ID format"})
+			c.Abort()
+			return
+		}
 
-		c.Set("userId", userID)
+		c.Set("userId", parsedUUID)
 		c.Next()
 	}
 }

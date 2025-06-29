@@ -77,9 +77,25 @@ func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
+	userID, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	authorID, ok := userID.(uuid.UUID)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+
 	var comment models.Comment
-	if err := db.First(&comment, commentId).Error; err != nil {
+	if err := db.First(&comment,"id = ?", commentId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		return
+	}
+
+	if comment.AuthorID != authorID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You can only edit your own comments"})
 		return
 	}
 
@@ -94,6 +110,28 @@ func updateCommentHandler(c *gin.Context, db *gorm.DB) {
 
 func deleteCommentHandler(c *gin.Context, db *gorm.DB) {
 	commentId := c.Param("id")
+
+	userID, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	authorID, ok := userID.(uuid.UUID)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+
+	var comment models.Comment
+	if err := db.First(&comment, "id = ?", commentId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		return
+	}
+
+	if comment.AuthorID != authorID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You can only delete your own comments"})
+		return
+	}
 
 	if err := db.Delete(&models.Comment{}, commentId).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete comment"})
@@ -112,7 +150,7 @@ func voteCommentHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	var comment models.Comment
-	if err := db.First(&comment, commentId).Error; err != nil {
+	if err := db.First(&comment, "id = ?" ,commentId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
 		return
 	}

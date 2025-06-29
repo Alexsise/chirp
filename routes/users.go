@@ -64,7 +64,7 @@ func updateUserProfileHandler(c *gin.Context, db *gorm.DB) {
 	}
 
 	var user models.User
-	if err := db.First(&user, authorID).Error; err != nil {
+	if err := db.First(&user, "id = ?", authorID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
