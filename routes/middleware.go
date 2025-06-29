@@ -27,6 +27,10 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		signingKey := os.Getenv("JWT_SECRET")
+    if signingKey == "" {
+      signingKey = "default_secret"
+    }
+
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.NewValidationError("unexpected signing method", jwt.ValidationErrorSignatureInvalid)
